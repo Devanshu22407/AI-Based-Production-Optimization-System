@@ -174,3 +174,4 @@ If cost columns are missing, cost cards safely show `-` instead of failing.
 ## License
 
 For academic and educational use.
+ 
