@@ -52,22 +52,22 @@ function ScenarioSimulator() {
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         <label className="text-xs text-muted-foreground">
           Original Workers
-          <input type="number" className="mt-1 h-9 w-full rounded-md border border-border bg-secondary/50 px-2 text-foreground" value={form.original_workers} onChange={(event) => update("original_workers", event.target.value)} />
+          <input type="number" className="glass-input mt-1 h-9 w-full px-2" value={form.original_workers} onChange={(event) => update("original_workers", event.target.value)} />
         </label>
         <label className="text-xs text-muted-foreground">
           New Workers
-          <input type="number" className="mt-1 h-9 w-full rounded-md border border-border bg-secondary/50 px-2 text-foreground" value={form.new_workers} onChange={(event) => update("new_workers", event.target.value)} />
+          <input type="number" className="glass-input mt-1 h-9 w-full px-2" value={form.new_workers} onChange={(event) => update("new_workers", event.target.value)} />
         </label>
         <label className="text-xs text-muted-foreground">
           Batch Size
-          <input type="number" className="mt-1 h-9 w-full rounded-md border border-border bg-secondary/50 px-2 text-foreground" value={form.batch_size} onChange={(event) => update("batch_size", event.target.value)} />
+          <input type="number" className="glass-input mt-1 h-9 w-full px-2" value={form.batch_size} onChange={(event) => update("batch_size", event.target.value)} />
         </label>
       </div>
 
       <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
         <label className="text-xs text-muted-foreground">
           Original Machine
-          <select className="mt-1 h-9 w-full rounded-md border border-border bg-secondary/50 px-2 text-foreground" value={form.original_machine_id} onChange={(event) => update("original_machine_id", event.target.value)}>
+          <select className="glass-input mt-1 h-9 w-full px-2" value={form.original_machine_id} onChange={(event) => update("original_machine_id", event.target.value)}>
             {["M1", "M2", "M3", "M4", "M5"].map((machine) => (
               <option key={machine} value={machine}>{machine}</option>
             ))}
@@ -75,7 +75,7 @@ function ScenarioSimulator() {
         </label>
         <label className="text-xs text-muted-foreground">
           New Machine
-          <select className="mt-1 h-9 w-full rounded-md border border-border bg-secondary/50 px-2 text-foreground" value={form.new_machine_id} onChange={(event) => update("new_machine_id", event.target.value)}>
+          <select className="glass-input mt-1 h-9 w-full px-2" value={form.new_machine_id} onChange={(event) => update("new_machine_id", event.target.value)}>
             {["M1", "M2", "M3", "M4", "M5"].map((machine) => (
               <option key={machine} value={machine}>{machine}</option>
             ))}
@@ -89,7 +89,7 @@ function ScenarioSimulator() {
       </button>
 
       {result && (
-        <div className="mt-4 rounded-lg border border-border bg-secondary/30 p-3 text-xs text-foreground">
+        <div className="glass-pane mt-4 p-3 text-xs text-foreground">
           <p>Original Time: {formatDuration(result.original_time)}</p>
           <p>New Estimated Time: {formatDuration(result.new_estimated_time)}</p>
           <p>Improvement: {formatDuration(Math.abs(result.improvement_minutes))} {result.improved ? "faster" : "slower"}</p>

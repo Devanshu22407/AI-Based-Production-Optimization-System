@@ -7,6 +7,7 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from ml.train_model import DATA_PATH, train_and_save_model
 from services.data_validation_service import validate_dataset_quality
+from services.dataset_service import save_dataset
 from services.preprocessing import validate_dataset_columns
 
 
@@ -45,14 +46,16 @@ async def upload_dataset(file: UploadFile = File(...)):
             raise ValueError(f"Dataset validation failed: {validation_result['warnings']}")
         validate_dataset_columns(df)
 
-        DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
-        df.to_csv(DATA_PATH, index=False)
+        mongodb_saved = save_dataset(df)
+        if not mongodb_saved:
+            raise ValueError("Dataset uploaded to local storage, but MongoDB save failed. Ensure MongoDB is running.")
         temporary_path.unlink(missing_ok=True)
 
         training_result = train_and_save_model()
         return {
             "message": "Dataset uploaded and model trained successfully",
             "rows": int(len(df)),
+            "mongodb_saved": mongodb_saved,
             "training_result": training_result,
         }
     except ValueError as validation_error:

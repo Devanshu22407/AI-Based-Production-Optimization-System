@@ -7,6 +7,7 @@ from api.prediction import router as prediction_router
 from api.retrain_model import router as retrain_router
 from api.schedule import router as schedule_router
 from api.upload_dataset import router as upload_router
+from services.mongodb_service import is_mongodb_connected
 
 
 app = FastAPI(
@@ -35,6 +36,7 @@ def health_check():
     return {
         "status": "ok",
         "service": "Production Batch Scheduling API",
+        "mongodb_connected": is_mongodb_connected(),
     }
 
 

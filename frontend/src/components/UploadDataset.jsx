@@ -48,7 +48,7 @@ function UploadDataset({ onRefresh }) {
 
       <div className="mt-4 flex flex-col gap-3 lg:flex-row">
         <input
-          className="h-9 w-full rounded-md border border-border bg-secondary/50 p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          className="glass-input h-9 w-full p-2 text-xs"
           type="file"
           accept=".csv"
           onChange={(event) => setSelectedFile(event.target.files?.[0] || null)}
@@ -66,7 +66,7 @@ function UploadDataset({ onRefresh }) {
         <button
           onClick={handleRetrain}
           disabled={loading}
-          className="h-9 rounded-md border border-border px-4 text-xs text-muted-foreground transition hover:bg-secondary/60 disabled:opacity-60"
+          className="glass-button h-9 px-4 text-xs disabled:opacity-60"
         >
           <span className="inline-flex items-center gap-1.5">
             {loadingAction === "retrain" && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
@@ -76,7 +76,7 @@ function UploadDataset({ onRefresh }) {
       </div>
 
       {status && (
-        <div className="mt-3 rounded-lg border border-border bg-secondary/40 px-3 py-2 text-xs text-muted-foreground">
+        <div className="glass-subtle mt-3 px-3 py-2 text-xs text-muted-foreground">
           {status}
         </div>
       )}

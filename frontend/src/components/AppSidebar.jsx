@@ -27,12 +27,12 @@ function AppSidebar({ activeTab, onTabChange }) {
 
   return (
     <aside
-      className={`relative flex flex-col border-r border-border bg-card/40 backdrop-blur-md transition-all duration-300 ${
+      className={`glass-sidebar relative flex flex-col border-r border-border transition-all duration-300 ${
         collapsed ? "w-16" : "w-56"
       }`}
     >
       <div className="flex items-center gap-3 border-b border-border p-4">
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/15">
+        <div className="glass-pane flex h-9 w-9 flex-shrink-0 items-center justify-center border-primary/20 bg-primary/15">
           <FlaskConical className="h-4 w-4 text-primary" />
         </div>
         {!collapsed && (
@@ -57,7 +57,7 @@ function AppSidebar({ activeTab, onTabChange }) {
               className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 ${
                 isActive
                   ? "glow-border border border-primary/15 bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                  : "text-muted-foreground hover:bg-secondary/35 hover:text-foreground"
               }`}
             >
               <Icon className={`h-4 w-4 flex-shrink-0 ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} />
@@ -69,11 +69,11 @@ function AppSidebar({ activeTab, onTabChange }) {
       </nav>
 
       <div className="space-y-1 border-t border-border p-3">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground">
+        <button className="glass-button flex w-full items-center gap-3 px-3 py-2 text-sm">
           <Settings className="h-4 w-4 flex-shrink-0" />
           {!collapsed && <span className="text-[13px]">Settings</span>}
         </button>
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground">
+        <button className="glass-button flex w-full items-center gap-3 px-3 py-2 text-sm">
           <HelpCircle className="h-4 w-4 flex-shrink-0" />
           {!collapsed && <span className="text-[13px]">Help</span>}
         </button>
@@ -81,7 +81,7 @@ function AppSidebar({ activeTab, onTabChange }) {
 
       <button
         onClick={() => setCollapsed((prev) => !prev)}
-        className="absolute -right-3 top-20 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-border bg-secondary text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="glass-button absolute -right-3 top-20 z-10 flex h-6 w-6 items-center justify-center rounded-full"
       >
         {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
       </button>

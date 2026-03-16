@@ -33,7 +33,7 @@ function DatasetViewer({ dataset }) {
               placeholder="Search batches..."
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              className="h-8 w-48 rounded-md border border-border bg-secondary/50 pl-7 pr-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+              className="glass-input h-8 w-48 pl-7 pr-2 text-xs"
             />
           </div>
           <span className="font-mono text-[10px] text-muted-foreground">{dataset.length} records</span>
@@ -43,7 +43,7 @@ function DatasetViewer({ dataset }) {
       <div className="overflow-x-auto">
         <table className="data-table w-full text-[11px]">
           <thead>
-            <tr className="border-y border-border bg-secondary/30">
+            <tr className="glass-table-head border-y border-border">
               {[
                 "Batch",
                 "Product",
@@ -70,7 +70,7 @@ function DatasetViewer({ dataset }) {
           </thead>
           <tbody>
             {displayed.map((d) => (
-              <tr key={d.Batch_ID} className="border-b border-border/20 transition-colors">
+              <tr key={d.Batch_ID} className="glass-row border-b border-border/20 transition-colors">
                 <td className="px-3 py-2 font-mono font-semibold text-primary">{d.Batch_ID}</td>
                 <td className="px-3 py-2 text-muted-foreground">{String(d.Product_Type || "").replace("Oncology_", "")}</td>
                 <td className="px-3 py-2">{d.Production_Line}</td>
@@ -92,7 +92,7 @@ function DatasetViewer({ dataset }) {
             ))}
           </tbody>
         </table>
-        <div className="border-t border-border/30 px-5 py-2 text-center text-[10px] text-muted-foreground">
+        <div className="glass-subtle border-t border-border/30 px-5 py-2 text-center text-[10px] text-muted-foreground">
           Showing latest {displayed.length} of {filtered.length} records
         </div>
       </div>

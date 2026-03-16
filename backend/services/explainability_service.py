@@ -4,10 +4,10 @@ from collections import defaultdict
 from typing import Any, Dict, List
 
 import numpy as np
-import pandas as pd
 from sklearn.inspection import permutation_importance
 
-from ml.train_model import DATA_PATH, load_model
+from ml.train_model import load_model
+from services.dataset_service import load_dataset
 from services.preprocessing import split_features_target
 
 
@@ -60,7 +60,7 @@ def get_feature_importance(top_n: int = 10) -> Dict[str, List[Dict[str, Any]]]:
     pipeline = model_artifact["pipeline"]
     selected_model = model_artifact.get("model_name", "random_forest")
 
-    df = pd.read_csv(DATA_PATH)
+    df = load_dataset()
     x_data, y_data = split_features_target(df)
     sample_size = min(1500, len(x_data))
     x_sample = x_data.tail(sample_size)

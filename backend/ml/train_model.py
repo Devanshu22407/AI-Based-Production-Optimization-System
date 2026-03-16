@@ -13,6 +13,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 
 from services.feature_engineering import build_preprocessor
+from services.dataset_service import append_dataset_record, load_dataset
+from services.mongodb_service import append_model_run, get_model_meta, load_dataset_records, set_model_meta
 from services.preprocessing import clean_dataframe, split_features_target
 from services.synthetic_data_generator import save_synthetic_dataset
 from services.training_history_service import append_training_history
@@ -70,6 +72,8 @@ def _build_candidate_pipelines(random_state: int = 42) -> Dict[str, Pipeline]:
 
 
 def ensure_dataset_exists(data_path: Path = DATA_PATH) -> Path:
+    if load_dataset_records(limit=1):
+        return data_path
     if not data_path.exists():
         save_synthetic_dataset(data_path, rows=5000)
     return data_path
@@ -77,17 +81,23 @@ def ensure_dataset_exists(data_path: Path = DATA_PATH) -> Path:
 
 def _load_dataframe(data_path: Path = DATA_PATH) -> pd.DataFrame:
     ensure_dataset_exists(data_path)
-    df = pd.read_csv(data_path)
+    df = load_dataset()
     return clean_dataframe(df)
 
 
 def _persist_meta(meta_path: Path, pending_new_records: int = 0) -> None:
     meta_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"pending_new_records": pending_new_records}
     with meta_path.open("w", encoding="utf-8") as meta_file:
-        json.dump({"pending_new_records": pending_new_records}, meta_file, indent=2)
+        json.dump(payload, meta_file, indent=2)
+    set_model_meta(payload)
 
 
 def _read_meta(meta_path: Path) -> Dict[str, Any]:
+    mongo_meta = get_model_meta()
+    if mongo_meta:
+        return mongo_meta
+
     if not meta_path.exists():
         return {"pending_new_records": 0}
     with meta_path.open("r", encoding="utf-8") as meta_file:
@@ -138,6 +148,14 @@ def train_and_save_model(
         rmse=selected_metrics["rmse"],
         mae=selected_metrics["mae"],
         r2=selected_metrics["r2"],
+    )
+    append_model_run(
+        {
+            "selected_model": best_model_name,
+            "metrics": scores,
+            "trained_rows": int(len(df)),
+            "model_path": str(model_path),
+        }
     )
 
     return {
@@ -195,9 +213,7 @@ def append_batch_record(
     auto_retrain_threshold: int = 20,
 ) -> Tuple[bool, int]:
     ensure_dataset_exists(data_path)
-    df = pd.read_csv(data_path)
-    updated_df = pd.concat([df, pd.DataFrame([batch_record])], ignore_index=True)
-    updated_df.to_csv(data_path, index=False)
+    append_dataset_record(batch_record)
 
     meta = _read_meta(meta_path)
     pending_new_records = int(meta.get("pending_new_records", 0)) + 1

@@ -20,9 +20,9 @@ const COLORS = ["#2dd4bf", "#22d3ee", "#3b82f6", "#a78bfa", "#f59e0b", "#ef4444"
 
 const tooltipStyle = {
   borderRadius: "12px",
-  border: "1px solid hsl(225, 16%, 18%)",
-  background: "hsl(225, 22%, 10%)",
-  boxShadow: "0 8px 32px -8px rgba(0,0,0,0.6)",
+  border: "1px solid hsl(var(--tooltip-border))",
+  background: "hsl(var(--tooltip-bg))",
+  boxShadow: "0 8px 32px -8px rgba(0,0,0,0.25)",
   fontSize: "11px"
 };
 
@@ -52,9 +52,9 @@ function AnalyticsCharts({ analytics, dataset }) {
         <h4 className="section-heading mb-4">Machine Utilization</h4>
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={utilData} barSize={32}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 16%, 15%)" vertical={false} />
-            <XAxis dataKey="Machine_ID" tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} unit="%" />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" vertical={false} />
+            <XAxis dataKey="Machine_ID" tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} unit="%" />
             <Tooltip contentStyle={tooltipStyle} formatter={formatTooltipValue} />
             <Bar dataKey="Utilization" radius={[6, 6, 0, 0]}>
               {utilData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -73,9 +73,9 @@ function AnalyticsCharts({ analytics, dataset }) {
                 <stop offset="100%" stopColor="#2dd4bf" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 16%, 15%)" vertical={false} />
-            <XAxis dataKey="range" tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" vertical={false} />
+            <XAxis dataKey="range" tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={tooltipStyle} formatter={formatTooltipValue} />
             <Area type="monotone" dataKey="count" stroke="#2dd4bf" strokeWidth={2} fill="url(#areaGrad)" />
           </AreaChart>
@@ -86,9 +86,9 @@ function AnalyticsCharts({ analytics, dataset }) {
         <h4 className="section-heading mb-4">Batch Completion Timeline</h4>
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={timeline}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 16%, 15%)" vertical={false} />
-            <XAxis dataKey="step" tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" vertical={false} />
+            <XAxis dataKey="step" tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={tooltipStyle} formatter={formatTooltipValue} />
             <Line type="monotone" dataKey="cumulative_minutes" stroke="#ef4444" strokeWidth={2} dot={false} />
           </LineChart>
@@ -99,9 +99,9 @@ function AnalyticsCharts({ analytics, dataset }) {
         <h4 className="section-heading mb-4">Avg Workers per Machine</h4>
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={workers} barSize={32}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 16%, 15%)" vertical={false} />
-            <XAxis dataKey="Machine_ID" tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" vertical={false} />
+            <XAxis dataKey="Machine_ID" tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={tooltipStyle} formatter={formatTooltipValue} />
             <Bar dataKey="Workers" fill="#a78bfa" radius={[6, 6, 0, 0]} />
           </BarChart>
@@ -135,9 +135,9 @@ function AnalyticsCharts({ analytics, dataset }) {
         <h4 className="section-heading mb-4">Processing Time Trends</h4>
         <ResponsiveContainer width="100%" height={220}>
           <LineChart data={trends}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 16%, 15%)" vertical={false} />
-            <XAxis dataKey="batch_index" tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: "hsl(215, 14%, 45%)" }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" vertical={false} />
+            <XAxis dataKey="batch_index" tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: "hsl(var(--chart-tick))" }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={tooltipStyle} formatter={formatTooltipValue} />
             <Line type="monotone" dataKey="processing_time" stroke="#2dd4bf" strokeWidth={2} dot={false} />
           </LineChart>

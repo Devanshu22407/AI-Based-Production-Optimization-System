@@ -35,7 +35,7 @@ function Field({ label, children }) {
 }
 
 const inputClassName =
-  "h-9 w-full rounded-md border border-border bg-secondary/50 px-3 text-sm text-foreground hover:bg-secondary/80 focus:outline-none focus:ring-1 focus:ring-primary";
+  "glass-input h-9 w-full px-3 text-sm";
 
 function BatchPrediction({ onRefresh }) {
   const [form, setForm] = useState(initialForm);
@@ -186,7 +186,7 @@ function BatchPrediction({ onRefresh }) {
           {loadingAction === "predict" ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Sparkles className="mr-1.5 h-4 w-4" />}
           {loadingAction === "predict" ? "Processing..." : "Predict Processing Time"}
         </button>
-        <button onClick={handleAddBatch} disabled={loading} className="flex h-10 items-center justify-center rounded-lg border border-border px-4 text-sm text-muted-foreground hover:bg-secondary/60 disabled:opacity-60">
+        <button onClick={handleAddBatch} disabled={loading} className="glass-button flex h-10 items-center justify-center px-4 text-sm disabled:opacity-60">
           {loadingAction === "add" ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Plus className="mr-1 h-4 w-4" />}
           {loadingAction === "add" ? "Saving..." : "Add Batch"}
         </button>
@@ -202,7 +202,7 @@ function BatchPrediction({ onRefresh }) {
           <p className="mt-1 text-xs text-muted-foreground">estimated processing duration</p>
         </div>
       )}
-      {message && <div className="mt-3 rounded-lg border border-border bg-secondary/40 px-4 py-2 text-xs text-muted-foreground">{message}</div>}
+      {message && <div className="glass-subtle mt-3 px-4 py-2 text-xs text-muted-foreground">{message}</div>}
     </div>
   );
 }

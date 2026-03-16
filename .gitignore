@@ -27,6 +27,7 @@ backend/models/model_meta.json
 backend/data/model_training_history.json
 backend/data/uploaded_dataset_tmp.csv
 backend/data/validation_dataset_tmp.csv
+backend/data/mongodb-data/
 
 # Frontend
 frontend/node_modules/

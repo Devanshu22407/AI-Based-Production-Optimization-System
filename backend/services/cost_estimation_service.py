@@ -4,7 +4,7 @@ from typing import Any, Dict, List
 
 import pandas as pd
 
-from ml.train_model import DATA_PATH
+from services.dataset_service import load_dataset
 
 
 WAGE_RATE_COLUMNS = ["Wage_Rate", "Worker_Wage_Rate_INR_per_Min"]
@@ -21,7 +21,7 @@ def _pick_existing_column(df: pd.DataFrame, candidates: List[str]) -> str | None
 
 
 def get_production_cost_estimation(limit: int = 120) -> Dict[str, Any]:
-    df = pd.read_csv(DATA_PATH)
+    df = load_dataset()
     if df.empty:
         return {
             "batch_cost_estimates": [],

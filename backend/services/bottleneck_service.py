@@ -2,13 +2,11 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
-import pandas as pd
-
-from ml.train_model import DATA_PATH
+from services.dataset_service import load_dataset
 
 
 def detect_bottlenecks() -> Dict[str, List[Dict[str, Any]]]:
-    df = pd.read_csv(DATA_PATH)
+    df = load_dataset()
     if df.empty:
         return {"bottleneck_machines": []}
 

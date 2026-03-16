@@ -74,12 +74,12 @@ function ModelPanel({ modelStatus, onRefresh }) {
         </div>
 
         <div className="grid flex-1 grid-cols-2 gap-3">
-          <div className="rounded-lg border border-border bg-secondary/40 p-3">
+          <div className="glass-pane p-3">
             <p className="text-[9px] uppercase tracking-wider text-muted-foreground">MAE</p>
             <p className="font-mono text-sm font-bold text-foreground">{formatDuration(mae)}</p>
             <p className="text-[9px] text-muted-foreground">avg error</p>
           </div>
-          <div className="rounded-lg border border-border bg-secondary/40 p-3">
+          <div className="glass-pane p-3">
             <p className="text-[9px] uppercase tracking-wider text-muted-foreground">RMSE</p>
             <p className="font-mono text-sm font-bold text-foreground">{formatDuration(rmse)}</p>
             <p className="text-[9px] text-muted-foreground">root mean sq error</p>

@@ -8,7 +8,8 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from ml.scheduler_engine import build_analytics, build_optimized_schedule
-from ml.train_model import DATA_PATH, get_model_status
+from ml.train_model import get_model_status
+from services.dataset_service import load_dataset
 from services.bottleneck_service import detect_bottlenecks
 from services.cost_estimation_service import get_production_cost_estimation
 from services.explainability_service import get_feature_importance
@@ -70,7 +71,7 @@ def get_analytics():
 @router.get("/dataset")
 def get_dataset(limit: int = 300):
     try:
-        df = pd.read_csv(DATA_PATH)
+        df = load_dataset()
         subset = df.tail(max(1, min(limit, 5000)))
         records = json.loads(subset.to_json(orient="records", date_format="iso"))
         return {

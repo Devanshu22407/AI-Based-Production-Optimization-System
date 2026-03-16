@@ -5,12 +5,18 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
+from services.mongodb_service import append_training_history_record, load_training_history_records
+
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 HISTORY_PATH = BASE_DIR / "data" / "model_training_history.json"
 
 
 def load_training_history(history_path: Path = HISTORY_PATH) -> List[Dict[str, Any]]:
+    mongo_records = load_training_history_records()
+    if mongo_records:
+        return mongo_records
+
     if not history_path.exists():
         return []
     try:
@@ -44,4 +50,5 @@ def append_training_history(
     history.append(record)
     with history_path.open("w", encoding="utf-8") as history_file:
         json.dump(history, history_file, indent=2)
+    append_training_history_record(record)
     return record

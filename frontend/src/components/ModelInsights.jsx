@@ -52,7 +52,7 @@ function ModelInsights({ featureImportance = [], trainingHistory = [], modelStat
         <Card title="Feature Importance">
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={importanceData} layout="vertical" barSize={14}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 16%, 15%)" horizontal={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" horizontal={false} />
               <XAxis type="number" axisLine={false} tickLine={false} />
               <YAxis type="category" dataKey="feature" width={130} axisLine={false} tickLine={false} />
               <Tooltip />
@@ -64,7 +64,7 @@ function ModelInsights({ featureImportance = [], trainingHistory = [], modelStat
         <Card title="RMSE Trend">
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 16%, 15%)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" vertical={false} />
               <XAxis dataKey="cycle" axisLine={false} tickLine={false} />
               <YAxis axisLine={false} tickLine={false} />
               <Tooltip />
@@ -77,7 +77,7 @@ function ModelInsights({ featureImportance = [], trainingHistory = [], modelStat
       <Card title="Training Dataset Growth">
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={trendData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(225, 16%, 15%)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" vertical={false} />
             <XAxis dataKey="cycle" axisLine={false} tickLine={false} />
             <YAxis axisLine={false} tickLine={false} />
             <Tooltip />
@@ -93,7 +93,7 @@ function ModelInsights({ featureImportance = [], trainingHistory = [], modelStat
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="bg-secondary/30 text-left text-[10px] uppercase tracking-wider text-muted-foreground">
+              <tr className="glass-table-head text-left text-[10px] uppercase tracking-wider text-muted-foreground">
                 <th className="px-4 py-2">Timestamp</th>
                 <th className="px-4 py-2">Rows</th>
                 <th className="px-4 py-2">Model</th>

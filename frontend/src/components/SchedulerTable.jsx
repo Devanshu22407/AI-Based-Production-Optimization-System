@@ -28,7 +28,7 @@ function SchedulerTable({ schedule }) {
         <div className="overflow-x-auto">
           <table className="data-table w-full text-xs">
             <thead>
-              <tr className="border-y border-border bg-secondary/30">
+              <tr className="glass-table-head border-y border-border">
                 <th className="px-5 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Order</th>
                 <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Batch ID</th>
                 <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Machine</th>
@@ -39,9 +39,9 @@ function SchedulerTable({ schedule }) {
             </thead>
             <tbody>
               {top.map((s) => (
-                <tr key={`${s.Batch_ID}-${s.Order}`} className="border-b border-border/30 transition-colors">
+                <tr key={`${s.Batch_ID}-${s.Order}`} className="glass-row border-b border-border/30 transition-colors">
                   <td className="px-5 py-3">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-secondary/60 font-mono text-[11px] font-semibold text-muted-foreground">
+                    <span className="glass-subtle inline-flex h-6 w-6 items-center justify-center font-mono text-[11px] font-semibold text-muted-foreground">
                       {s.Order}
                     </span>
                   </td>

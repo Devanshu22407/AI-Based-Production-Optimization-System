@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import numpy as np
-import pandas as pd
 
 from ml.train_model import DATA_PATH, load_model
+from services.dataset_service import load_dataset
 from services.preprocessing import FEATURE_COLUMNS
 
 
@@ -15,7 +15,7 @@ def _priority_rank(priority_value: str) -> int:
 
 
 def build_optimized_schedule(data_path: Path = DATA_PATH, batch_window: int = 50) -> List[Dict[str, Any]]:
-    df = pd.read_csv(data_path)
+    df = load_dataset()
     active_df = df.tail(batch_window).copy().reset_index(drop=True)
 
     if active_df.empty:
@@ -59,7 +59,7 @@ def build_optimized_schedule(data_path: Path = DATA_PATH, batch_window: int = 50
 
 
 def build_analytics(data_path: Path = DATA_PATH) -> Dict[str, Any]:
-    df = pd.read_csv(data_path)
+    df = load_dataset()
     if df.empty:
         return {
             "overview": {

@@ -19,6 +19,18 @@ pip install -r requirements.txt
 python main.py
 ```
 
+Optional MongoDB setup (recommended):
+
+```bash
+# PowerShell
+$env:MONGODB_URI="mongodb://127.0.0.1:27017"
+$env:MONGODB_DB="AI-Based-Production-Optimization-System"
+python main.py
+```
+
+If MongoDB is available, user-added dataset records and model progress are persisted in MongoDB.
+If MongoDB is not available, the backend falls back to local CSV/JSON files.
+
 Backend runs at: `http://127.0.0.1:8000`
 
 ### Run Frontend
@@ -170,6 +182,20 @@ If cost columns are missing, cost cards safely show `-` instead of failing.
 - This is an academic and demonstration-focused project.
 - Plant behavior is simulated from synthetic and uploaded datasets.
 - Rules for risk, maintenance, and recommendations are intentionally interpretable.
+
+## MongoDB Compass
+
+Use this connection string in MongoDB Compass:
+- `mongodb://127.0.0.1:27017/AI-Based-Production-Optimization-System`
+
+Default database used by this project:
+- `AI-Based-Production-Optimization-System`
+
+Collections:
+- `production_dataset` (all uploaded and user-added batches)
+- `model_training_history` (training history timeline)
+- `model_meta` (pending retrain counters and meta)
+- `model_runs` (full model training run summaries)
 
 ## License
 

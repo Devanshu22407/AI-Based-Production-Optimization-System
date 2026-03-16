@@ -2,16 +2,14 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-import pandas as pd
-
 from ml.scheduler_engine import build_optimized_schedule
-from ml.train_model import DATA_PATH
+from services.dataset_service import load_dataset
 from services.bottleneck_service import detect_bottlenecks
 from services.worker_productivity_service import get_worker_productivity_analysis
 
 
 def get_smart_recommendations() -> Dict[str, List[str]]:
-    df = pd.read_csv(DATA_PATH)
+    df = load_dataset()
     recommendations: List[str] = []
 
     if df.empty:

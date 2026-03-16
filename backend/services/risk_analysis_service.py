@@ -4,7 +4,7 @@ from typing import Any, Dict, List
 
 import pandas as pd
 
-from ml.train_model import DATA_PATH
+from services.dataset_service import load_dataset
 
 
 def _score_row(row: pd.Series, batch_size_threshold: float) -> float:
@@ -25,7 +25,7 @@ def _risk_level(score: float) -> str:
 
 
 def get_batch_risk_analysis(limit: int = 120) -> Dict[str, List[Dict[str, Any]]]:
-    df = pd.read_csv(DATA_PATH)
+    df = load_dataset()
     if df.empty:
         return {"batch_risk_analysis": []}
 
