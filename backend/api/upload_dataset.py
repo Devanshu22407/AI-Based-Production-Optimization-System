@@ -47,13 +47,17 @@ async def upload_dataset(file: UploadFile = File(...)):
         validate_dataset_columns(df)
 
         mongodb_saved = save_dataset(df)
-        if not mongodb_saved:
-            raise ValueError("Dataset uploaded to local storage, but MongoDB save failed. Ensure MongoDB is running.")
         temporary_path.unlink(missing_ok=True)
 
         training_result = train_and_save_model()
+        message = "Dataset uploaded and model trained successfully"
+        if not mongodb_saved:
+            message = (
+                "Dataset uploaded and model trained successfully. "
+                "MongoDB is unavailable, so data is currently stored in local CSV/JSON files."
+            )
         return {
-            "message": "Dataset uploaded and model trained successfully",
+            "message": message,
             "rows": int(len(df)),
             "mongodb_saved": mongodb_saved,
             "training_result": training_result,
