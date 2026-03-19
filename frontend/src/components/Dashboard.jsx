@@ -270,7 +270,7 @@ function Dashboard() {
           </div>
           <div className="flex items-center gap-2">
             <div className="mr-4 flex items-center gap-1.5">
-              <div className="pulse-dot" />
+              <div className={`pulse-dot ${connectionError ? "is-offline" : "is-online"}`} />
               <span className="text-[10px] font-medium text-muted-foreground">
                 {connectionError ? "Backend Offline" : "System Online"}
               </span>

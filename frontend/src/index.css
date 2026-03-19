@@ -143,6 +143,16 @@ body {
     animation: pulse-glow 2s ease-in-out infinite;
   }
 
+  .pulse-dot.is-online {
+    background: hsl(var(--success));
+    box-shadow: 0 0 6px hsl(152 65% 45% / 0.6);
+  }
+
+  .pulse-dot.is-offline {
+    background: hsl(var(--destructive));
+    box-shadow: 0 0 6px hsl(var(--destructive) / 0.65);
+  }
+
   .chart-container {
     @apply glass-card p-5;
   }
