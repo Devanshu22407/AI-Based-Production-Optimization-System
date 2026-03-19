@@ -38,7 +38,7 @@ Backend runs at: `http://127.0.0.1:8000`
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
 Frontend runs at: `http://localhost:3000`

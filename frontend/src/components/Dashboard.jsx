@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Bell, Loader2, Moon, RefreshCw, Sun } from "lucide-react";
+import { Loader2, Moon, RefreshCw, Sun } from "lucide-react";
 import AppSidebar from "./AppSidebar";
 import StatCard from "./StatCard";
 import BatchPrediction from "./BatchPrediction";
@@ -13,10 +13,12 @@ import ProductionForecastCard from "./ProductionForecastCard";
 import ModelInsights from "./ModelInsights";
 import ScenarioSimulator from "./ScenarioSimulator";
 import AdvancedAnalyticsPanel from "./AdvancedAnalyticsPanel";
+import HelpSection from "./HelpSection";
 import {
   exportAnalyticsCsv,
   exportScheduleCsv,
   getAnalytics,
+  getSystemHealth,
   getBottlenecks,
   getBatchRiskAnalysis,
   getDataset,
@@ -54,8 +56,36 @@ function Dashboard() {
   const [costAnalytics, setCostAnalytics] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
   const [connectionError, setConnectionError] = useState("");
+  const [systemStatus, setSystemStatus] = useState({
+    backendConnected: true,
+    mongodbConnected: true,
+    message: "System Online",
+  });
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+
+  const checkSystemHealth = useCallback(async () => {
+    try {
+      const health = await getSystemHealth();
+      const backendConnected = health?.status === "ok";
+      const mongodbConnected = Boolean(health?.mongodb_connected);
+
+      let message = "System Online";
+      if (!backendConnected) {
+        message = "Backend not connected";
+      } else if (!mongodbConnected) {
+        message = "Database not connected";
+      }
+
+      setSystemStatus({ backendConnected, mongodbConnected, message });
+    } catch (error) {
+      setSystemStatus({
+        backendConnected: false,
+        mongodbConnected: false,
+        message: error?.message || "Backend not connected",
+      });
+    }
+  }, []);
 
   const refresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -135,11 +165,18 @@ function Dashboard() {
   }, [refresh]);
 
   useEffect(() => {
+    checkSystemHealth();
+    const intervalId = window.setInterval(checkSystemHealth, 5000);
+    return () => window.clearInterval(intervalId);
+  }, [checkSystemHealth]);
+
+  useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     window.localStorage.setItem("ui-theme", theme);
   }, [theme]);
 
   const overview = analytics?.overview || {};
+  const isSystemOnline = systemStatus.backendConnected && systemStatus.mongodbConnected;
   const avgWorkers = useMemo(() => {
     if (!dataset.length) return 0;
     return Math.round((dataset.reduce((sum, item) => sum + Number(item.Workers_Assigned || 0), 0) / dataset.length) * 10) / 10;
@@ -151,7 +188,9 @@ function Dashboard() {
     schedule: "Production Schedule",
     analytics: "Production Analytics",
     data: "Dataset Management",
-    model_insights: "Model Insights"
+    model_insights: "Model Insights",
+    settings: "Settings",
+    help: "Help & User Guide"
   };
 
   const downloadBlob = (blobData, filename) => {
@@ -250,6 +289,36 @@ function Dashboard() {
         );
       case "model_insights":
         return <ModelInsights featureImportance={featureImportance} trainingHistory={trainingHistory} modelStatus={modelStatus} />;
+      case "help":
+        return <HelpSection onNavigateTab={setActiveTab} />;
+      case "settings":
+        return (
+          <div className="max-w-2xl">
+            <div className="glass-card p-6">
+              <h3 className="font-display text-base font-semibold text-foreground">Dashboard Settings</h3>
+              <p className="mt-1 text-xs text-muted-foreground">Personalize your dashboard appearance.</p>
+
+              <div className="mt-5 rounded-lg border border-border bg-secondary/20 p-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Theme Mode</p>
+                    <p className="text-xs text-muted-foreground">Switch between dark and light mode.</p>
+                  </div>
+                  <button
+                    onClick={() => setTheme((previous) => (previous === "dark" ? "light" : "dark"))}
+                    className={`theme-switch ${theme === "light" ? "is-light" : ""}`}
+                    title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                    aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                  >
+                    <span className="theme-switch-knob" />
+                    <Sun className="theme-switch-track-icon theme-switch-track-sun" />
+                    <Moon className="theme-switch-track-icon theme-switch-track-moon" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       default:
         return null;
     }
@@ -270,32 +339,23 @@ function Dashboard() {
           </div>
           <div className="flex items-center gap-2">
             <div className="mr-4 flex items-center gap-1.5">
-              <div className="pulse-dot" />
+              <div className={`pulse-dot ${isSystemOnline ? "" : "offline"}`} />
               <span className="text-[10px] font-medium text-muted-foreground">
-                {connectionError ? "Backend Offline" : "System Online"}
+                {isSystemOnline ? "System Online" : "System Offline"}
               </span>
             </div>
             <button onClick={refresh} className="glass-button flex h-8 w-8 items-center justify-center text-xs">
               {isRefreshing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
             </button>
-            <button
-              onClick={() => setTheme((previous) => (previous === "dark" ? "light" : "dark"))}
-              className={`theme-switch ${theme === "light" ? "is-light" : ""}`}
-              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              <span className="theme-switch-knob" />
-              <Sun className="theme-switch-track-icon theme-switch-track-sun" />
-              <Moon className="theme-switch-track-icon theme-switch-track-moon" />
-            </button>
-            <button className="glass-button relative flex h-8 w-8 items-center justify-center text-xs">
-              <Bell className="h-3.5 w-3.5" />
-              <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-destructive" />
-            </button>
           </div>
         </header>
 
         <main className="flex-1 overflow-y-auto p-6">
+          {!isSystemOnline && (
+            <div className="mb-4 rounded-lg border border-destructive/40 bg-destructive/15 px-3 py-2 text-xs text-destructive backdrop-blur-md">
+              {systemStatus.message}
+            </div>
+          )}
           {connectionError && (
             <div className="mb-4 rounded-lg border border-destructive/40 bg-destructive/15 px-3 py-2 text-xs text-destructive backdrop-blur-md">
               {connectionError} Run backend: `cd backend` then `python main.py`
