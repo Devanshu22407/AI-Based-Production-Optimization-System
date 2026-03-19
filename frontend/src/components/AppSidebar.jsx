@@ -24,6 +24,8 @@ const navItems = [
 
 function AppSidebar({ activeTab, onTabChange }) {
   const [collapsed, setCollapsed] = useState(false);
+  const isSettingsActive = activeTab === "settings";
+  const isHelpActive = activeTab === "help";
 
   return (
     <aside
@@ -69,11 +71,25 @@ function AppSidebar({ activeTab, onTabChange }) {
       </nav>
 
       <div className="space-y-1 border-t border-border p-3">
-        <button className="glass-button flex w-full items-center gap-3 px-3 py-2 text-sm">
+        <button
+          onClick={() => onTabChange("settings")}
+          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
+            isSettingsActive
+              ? "glow-border border border-primary/15 bg-primary/10 text-primary"
+              : "glass-button"
+          }`}
+        >
           <Settings className="h-4 w-4 flex-shrink-0" />
           {!collapsed && <span className="text-[13px]">Settings</span>}
         </button>
-        <button className="glass-button flex w-full items-center gap-3 px-3 py-2 text-sm">
+        <button
+          onClick={() => onTabChange("help")}
+          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
+            isHelpActive
+              ? "glow-border border border-primary/15 bg-primary/10 text-primary"
+              : "glass-button"
+          }`}
+        >
           <HelpCircle className="h-4 w-4 flex-shrink-0" />
           {!collapsed && <span className="text-[13px]">Help</span>}
         </button>

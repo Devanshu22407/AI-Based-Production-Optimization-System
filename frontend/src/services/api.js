@@ -55,6 +55,11 @@ export const getAnalytics = async () => {
   return response.data;
 };
 
+export const getSystemHealth = async () => {
+  const response = await api.get("/");
+  return response.data;
+};
+
 export const getDataset = async (limit = 300) => {
   const response = await api.get(`/dataset?limit=${limit}`);
   return response.data;
