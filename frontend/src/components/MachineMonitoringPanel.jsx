@@ -17,12 +17,9 @@ function MachineMonitoringPanel({ machineUtilization = [], bottlenecks = [] }) {
     <div className="glass-card p-4">
       <h3 className="mb-3 font-display text-sm font-semibold text-foreground">Machine Status</h3>
       <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 xl:grid-cols-3">
-        {rows.map((row, index) => (
+        {rows.map((row) => (
           <div key={row.machine} className="glass-pane flex items-center justify-between px-2.5 py-1.5 text-[11px]">
-            <span className="flex items-center gap-2 font-semibold text-foreground">
-              <span className="font-mono text-[10px] text-muted-foreground">{index + 1}.</span>
-              {row.machine}
-            </span>
+            <span className="font-semibold text-foreground">{row.machine}</span>
             <span className={row.status.includes("High") ? "text-warning" : row.status === "Idle" ? "text-muted-foreground" : "text-success"}>
               {row.status}
             </span>

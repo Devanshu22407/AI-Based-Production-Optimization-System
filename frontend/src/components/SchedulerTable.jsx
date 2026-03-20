@@ -29,7 +29,7 @@ function SchedulerTable({ schedule }) {
           <table className="data-table w-full text-xs">
             <thead>
               <tr className="glass-table-head border-y border-border">
-                <th className="px-5 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">#</th>
+                <th className="px-5 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Order</th>
                 <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Batch ID</th>
                 <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Machine</th>
                 <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Priority</th>

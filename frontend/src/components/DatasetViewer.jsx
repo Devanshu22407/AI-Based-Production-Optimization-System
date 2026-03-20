@@ -25,8 +25,8 @@ function DatasetViewer({ dataset }) {
         String(d.Batch_ID || "").toLowerCase().includes(query) ||
         String(d.Product_Type || "").toLowerCase().includes(query)
     );
-                "#",
-                "Batch",
+  }, [search, dataset]);
+
   const latestRecords = useMemo(
     () => filtered.slice(-DATASET_WINDOW_SIZE).reverse(),
     [filtered]
@@ -48,11 +48,10 @@ function DatasetViewer({ dataset }) {
     }));
   };
 
-  const renderRows = (rows, startIndex = 1) => (
+  const renderRows = (rows) => (
     <tbody>
-      {rows.map((d, index) => (
+      {rows.map((d) => (
         <tr key={d.Batch_ID} className="glass-row border-b border-border/20 transition-colors">
-          <td className="px-3 py-2 font-mono text-[10px] text-muted-foreground">{startIndex + index}</td>
           <td className="px-3 py-2 font-mono font-semibold text-primary">{d.Batch_ID}</td>
           <td className="px-3 py-2 text-muted-foreground">{String(d.Product_Type || "").replace("Oncology_", "")}</td>
           <td className="px-3 py-2">{d.Production_Line}</td>
@@ -106,7 +105,6 @@ function DatasetViewer({ dataset }) {
             <tr className="glass-table-head border-y border-border">
               {[
                 "Batch",
-                  "#",
                 "Product",
                 "Line",
                 "Machine",
@@ -129,7 +127,7 @@ function DatasetViewer({ dataset }) {
               ))}
             </tr>
           </thead>
-          {sections.length > 0 ? renderRows(sections[0], 1) : <tbody />}
+          {sections.length > 0 ? renderRows(sections[0]) : <tbody />}
         </table>
 
         {sections.slice(1).map((sectionRows, idx) => {
@@ -153,7 +151,7 @@ function DatasetViewer({ dataset }) {
 
               {expanded && (
                 <table className="data-table w-full text-[11px]">
-                  {renderRows(sectionRows, start)}
+                  {renderRows(sectionRows)}
                 </table>
               )}
             </div>

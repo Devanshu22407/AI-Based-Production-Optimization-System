@@ -94,7 +94,6 @@ function ModelInsights({ featureImportance = [], trainingHistory = [], modelStat
           <table className="w-full text-xs">
             <thead>
               <tr className="glass-table-head text-left text-[10px] uppercase tracking-wider text-muted-foreground">
-                <th className="px-4 py-2">#</th>
                 <th className="px-4 py-2">Timestamp</th>
                 <th className="px-4 py-2">Rows</th>
                 <th className="px-4 py-2">Model</th>
@@ -106,7 +105,6 @@ function ModelInsights({ featureImportance = [], trainingHistory = [], modelStat
             <tbody>
               {trainingHistory.map((item, index) => (
                 <tr key={`${item.timestamp}-${index}`} className="border-t border-border/30">
-                  <td className="px-4 py-2 font-mono text-muted-foreground">{index + 1}</td>
                   <td className="px-4 py-2">{item.timestamp}</td>
                   <td className="px-4 py-2">{item.dataset_rows}</td>
                   <td className="px-4 py-2">{item.model_selected}</td>
