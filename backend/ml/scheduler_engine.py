@@ -9,12 +9,14 @@ from ml.train_model import DATA_PATH, load_model
 from services.dataset_service import load_dataset
 from services.preprocessing import FEATURE_COLUMNS
 
+ACTIVE_BATCH_WINDOW = 500
+
 
 def _priority_rank(priority_value: str) -> int:
     return {"High": 0, "Medium": 1, "Low": 2}.get(priority_value, 1)
 
 
-def build_optimized_schedule(data_path: Path = DATA_PATH, batch_window: int = 50) -> List[Dict[str, Any]]:
+def build_optimized_schedule(data_path: Path = DATA_PATH, batch_window: int = ACTIVE_BATCH_WINDOW) -> List[Dict[str, Any]]:
     df = load_dataset()
     active_df = df.tail(batch_window).copy().reset_index(drop=True)
 
@@ -75,7 +77,7 @@ def build_analytics(data_path: Path = DATA_PATH) -> Dict[str, Any]:
             "prediction_trends": [],
         }
 
-    schedule = build_optimized_schedule(data_path=data_path, batch_window=40)
+    schedule = build_optimized_schedule(data_path=data_path, batch_window=ACTIVE_BATCH_WINDOW)
     machine_utilization = (
         df.groupby("Machine_ID", as_index=False)["Machine_Load"].mean().rename(columns={"Machine_Load": "Utilization"})
     )
@@ -108,7 +110,7 @@ def build_analytics(data_path: Path = DATA_PATH) -> Dict[str, Any]:
         )
 
     trends = (
-        df.tail(120)
+        df.tail(ACTIVE_BATCH_WINDOW)
         .reset_index(drop=True)
         .assign(index=lambda frame: frame.index + 1)[["index", "Processing_Time"]]
         .rename(columns={"index": "batch_index", "Processing_Time": "processing_time"})
@@ -119,7 +121,7 @@ def build_analytics(data_path: Path = DATA_PATH) -> Dict[str, Any]:
         "overview": {
             "total_batches": int(len(df)),
             "active_machines": int(df["Machine_ID"].nunique()),
-            "workers_assigned": int(df.tail(25)["Workers_Assigned"].sum()),
+            "workers_assigned": int(df.tail(ACTIVE_BATCH_WINDOW)["Workers_Assigned"].sum()),
             "avg_processing_time": round(float(df["Processing_Time"].mean()), 2),
         },
         "machine_utilization": machine_utilization.to_dict(orient="records"),

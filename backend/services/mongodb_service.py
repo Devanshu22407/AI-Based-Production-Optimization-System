@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 from datetime import datetime
-from functools import lru_cache
 from typing import Any, Dict, List, Optional
 
 import numpy as np
@@ -21,6 +20,8 @@ DATASET_COLLECTION = "production_dataset"
 TRAINING_HISTORY_COLLECTION = "model_training_history"
 MODEL_META_COLLECTION = "model_meta"
 MODEL_RUNS_COLLECTION = "model_runs"
+
+_MONGO_CLIENT: Optional[MongoClient] = None
 
 
 def _to_native(value: Any) -> Any:
@@ -43,12 +44,21 @@ def _sanitize_document(document: Dict[str, Any]) -> Dict[str, Any]:
     return sanitized
 
 
-@lru_cache(maxsize=1)
 def _get_client() -> Optional[MongoClient]:
+    global _MONGO_CLIENT
+
+    if _MONGO_CLIENT is not None:
+        try:
+            _MONGO_CLIENT.admin.command("ping")
+            return _MONGO_CLIENT
+        except Exception:
+            _MONGO_CLIENT = None
+
     try:
         client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=1500)
         client.admin.command("ping")
-        return client
+        _MONGO_CLIENT = client
+        return _MONGO_CLIENT
     except Exception:
         return None
 

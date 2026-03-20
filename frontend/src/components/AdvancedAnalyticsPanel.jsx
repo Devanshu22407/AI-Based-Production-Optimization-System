@@ -28,9 +28,9 @@ function AdvancedAnalyticsPanel({ maintenanceAlerts = [], riskAnalysis = [], wor
             <p className="text-xs text-muted-foreground">No maintenance alerts currently detected.</p>
           ) : (
             <div className="space-y-2 text-xs">
-              {maintenanceAlerts.map((item) => (
+              {maintenanceAlerts.map((item, index) => (
                 <div key={item.machine} className="glass-pane border-warning/30 bg-warning/10 px-3 py-2">
-                  <p className="font-semibold text-warning">Machine {item.machine}</p>
+                  <p className="font-semibold text-warning">{index + 1}. Machine {item.machine}</p>
                   <p>Utilization: {(item.utilization * 100).toFixed(1)}%</p>
                   <p>Batches Processed: {item.batches_processed}</p>
                   <p>Recommendation: {item.recommendation}</p>
@@ -43,9 +43,9 @@ function AdvancedAnalyticsPanel({ maintenanceAlerts = [], riskAnalysis = [], wor
         <div className="glass-card p-5">
           <h3 className="mb-3 font-display text-sm font-semibold text-foreground">Batch Risk Analysis</h3>
           <div className="space-y-2 text-xs">
-            {topRisk.map((item) => (
+            {topRisk.map((item, index) => (
               <div key={item.batch_id} className="glass-pane flex items-center justify-between px-3 py-2">
-                <span>{item.batch_id}</span>
+                <span className="font-mono text-[11px]">{index + 1}. {item.batch_id}</span>
                 <span className={item.risk_level === "HIGH" ? "text-warning" : item.risk_level === "MEDIUM" ? "text-accent" : "text-success"}>
                   {item.risk_level} ({item.risk_score})
                 </span>
@@ -76,9 +76,9 @@ function AdvancedAnalyticsPanel({ maintenanceAlerts = [], riskAnalysis = [], wor
             <>
               <p className="mb-2 text-xs text-muted-foreground">Average Batch Cost: {formatINR(costAnalytics.average_batch_cost)}</p>
               <div className="space-y-2 text-xs">
-                {topCost.map((item) => (
+                {topCost.map((item, index) => (
                   <div key={item.batch_id} className="glass-pane flex items-center justify-between px-3 py-2">
-                    <span>{item.batch_id}</span>
+                    <span className="font-mono text-[11px]">{index + 1}. {item.batch_id}</span>
                     <span>{formatINR(item.estimated_cost)}</span>
                   </div>
                 ))}
@@ -93,7 +93,7 @@ function AdvancedAnalyticsPanel({ maintenanceAlerts = [], riskAnalysis = [], wor
           <h3 className="mb-3 font-display text-sm font-semibold text-foreground">Smart Recommendations</h3>
           <ul className="list-disc space-y-2 pl-4 text-xs text-foreground">
             {recommendations.map((item, index) => (
-              <li key={`${item}-${index}`}>{item}</li>
+              <li key={`${item}-${index}`}>{index + 1}. {item}</li>
             ))}
           </ul>
           {recommendations.length === 0 && <p className="text-xs text-muted-foreground">No recommendations generated.</p>}

@@ -1,9 +1,21 @@
-import { useMemo, useState } from "react";
-import { Database, Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ChevronDown, ChevronUp, Database, Search } from "lucide-react";
 import { formatDuration } from "../utils/time";
+
+const DATASET_WINDOW_SIZE = 500;
+const SECTION_SIZE = 100;
+
+function splitIntoSections(records, size) {
+  const sections = [];
+  for (let i = 0; i < records.length; i += size) {
+    sections.push(records.slice(i, i + size));
+  }
+  return sections;
+}
 
 function DatasetViewer({ dataset }) {
   const [search, setSearch] = useState("");
+  const [expandedSections, setExpandedSections] = useState({ 0: true });
 
   const filtered = useMemo(() => {
     if (!search) return dataset;
@@ -13,9 +25,55 @@ function DatasetViewer({ dataset }) {
         String(d.Batch_ID || "").toLowerCase().includes(query) ||
         String(d.Product_Type || "").toLowerCase().includes(query)
     );
+                "#",
+                "Batch",
+  const latestRecords = useMemo(
+    () => filtered.slice(-DATASET_WINDOW_SIZE).reverse(),
+    [filtered]
+  );
+
+  const sections = useMemo(
+    () => splitIntoSections(latestRecords, SECTION_SIZE),
+    [latestRecords]
+  );
+
+  useEffect(() => {
+    setExpandedSections({ 0: true });
   }, [search, dataset]);
 
-  const displayed = filtered.slice(-30).reverse();
+  const toggleSection = (index) => {
+    setExpandedSections((previous) => ({
+      ...previous,
+      [index]: !previous[index],
+    }));
+  };
+
+  const renderRows = (rows, startIndex = 1) => (
+    <tbody>
+      {rows.map((d, index) => (
+        <tr key={d.Batch_ID} className="glass-row border-b border-border/20 transition-colors">
+          <td className="px-3 py-2 font-mono text-[10px] text-muted-foreground">{startIndex + index}</td>
+          <td className="px-3 py-2 font-mono font-semibold text-primary">{d.Batch_ID}</td>
+          <td className="px-3 py-2 text-muted-foreground">{String(d.Product_Type || "").replace("Oncology_", "")}</td>
+          <td className="px-3 py-2">{d.Production_Line}</td>
+          <td className="px-3 py-2">{d.Machine_ID}</td>
+          <td className="px-3 py-2 font-mono">{d.Workers_Assigned}</td>
+          <td className="px-3 py-2 font-mono">{d.Raw_Material_Quantity}</td>
+          <td className="px-3 py-2 font-mono">{d.Batch_Size}</td>
+          <td className="px-3 py-2">
+            <span className={`priority-${String(d.Production_Priority || "low").toLowerCase()}`}>
+              {d.Production_Priority}
+            </span>
+          </td>
+          <td className="px-3 py-2">{d.Quality_Check_Level}</td>
+          <td className="px-3 py-2 font-mono">{d.Machine_Load}</td>
+          <td className="px-3 py-2">{d.Temperature_Control}</td>
+          <td className="px-3 py-2">{d.Shift}</td>
+          <td className="px-3 py-2 font-mono font-semibold">{formatDuration(d.Processing_Time)}</td>
+        </tr>
+      ))}
+    </tbody>
+  );
 
   return (
     <div className="glass-card animate-slide-up overflow-hidden">
@@ -36,7 +94,9 @@ function DatasetViewer({ dataset }) {
               className="glass-input h-8 w-48 pl-7 pr-2 text-xs"
             />
           </div>
-          <span className="font-mono text-[10px] text-muted-foreground">{dataset.length} records</span>
+          <span className="font-mono text-[10px] text-muted-foreground">
+            showing {latestRecords.length} of {filtered.length} records
+          </span>
         </div>
       </div>
 
@@ -46,6 +106,7 @@ function DatasetViewer({ dataset }) {
             <tr className="glass-table-head border-y border-border">
               {[
                 "Batch",
+                  "#",
                 "Product",
                 "Line",
                 "Machine",
@@ -68,32 +129,39 @@ function DatasetViewer({ dataset }) {
               ))}
             </tr>
           </thead>
-          <tbody>
-            {displayed.map((d) => (
-              <tr key={d.Batch_ID} className="glass-row border-b border-border/20 transition-colors">
-                <td className="px-3 py-2 font-mono font-semibold text-primary">{d.Batch_ID}</td>
-                <td className="px-3 py-2 text-muted-foreground">{String(d.Product_Type || "").replace("Oncology_", "")}</td>
-                <td className="px-3 py-2">{d.Production_Line}</td>
-                <td className="px-3 py-2">{d.Machine_ID}</td>
-                <td className="px-3 py-2 font-mono">{d.Workers_Assigned}</td>
-                <td className="px-3 py-2 font-mono">{d.Raw_Material_Quantity}</td>
-                <td className="px-3 py-2 font-mono">{d.Batch_Size}</td>
-                <td className="px-3 py-2">
-                  <span className={`priority-${String(d.Production_Priority || "low").toLowerCase()}`}>
-                    {d.Production_Priority}
-                  </span>
-                </td>
-                <td className="px-3 py-2">{d.Quality_Check_Level}</td>
-                <td className="px-3 py-2 font-mono">{d.Machine_Load}</td>
-                <td className="px-3 py-2">{d.Temperature_Control}</td>
-                <td className="px-3 py-2">{d.Shift}</td>
-                <td className="px-3 py-2 font-mono font-semibold">{formatDuration(d.Processing_Time)}</td>
-              </tr>
-            ))}
-          </tbody>
+          {sections.length > 0 ? renderRows(sections[0], 1) : <tbody />}
         </table>
+
+        {sections.slice(1).map((sectionRows, idx) => {
+          const sectionIndex = idx + 1;
+          const start = sectionIndex * SECTION_SIZE + 1;
+          const end = sectionIndex * SECTION_SIZE + sectionRows.length;
+          const expanded = Boolean(expandedSections[sectionIndex]);
+
+          return (
+            <div key={`dataset-section-${sectionIndex}`} className="border-t border-border/30">
+              <button
+                type="button"
+                onClick={() => toggleSection(sectionIndex)}
+                className="glass-subtle flex w-full items-center justify-between px-5 py-2 text-left text-[10px] text-muted-foreground"
+              >
+                <span>
+                  Records {start}-{end} (collapsed by default)
+                </span>
+                {expanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+              </button>
+
+              {expanded && (
+                <table className="data-table w-full text-[11px]">
+                  {renderRows(sectionRows, start)}
+                </table>
+              )}
+            </div>
+          );
+        })}
+
         <div className="glass-subtle border-t border-border/30 px-5 py-2 text-center text-[10px] text-muted-foreground">
-          Showing latest {displayed.length} of {filtered.length} records
+          Showing latest {latestRecords.length} records in {Math.max(sections.length, 1)} section(s)
         </div>
       </div>
     </div>
